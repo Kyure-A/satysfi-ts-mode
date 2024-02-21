@@ -63,16 +63,37 @@
   "hoge")
 
 (defvar satysfi-ts-mode--indent-rules
-  (let ((offset satysfi-ts-mode-indent-offset))
+  (let ((indent-end satysfi-ts-mode-indent-offset)
+        (indent 0))
     `((satysfi
-       ((node-is ">") parent-bol 0)
-       ((node-is "}") parent-bol 0)
-       ((node-is "}") parent-bol 0)
-       ((parent-is "tuple") parent-bol 0)
-       ((parent-is "record") parent-bol 0)
-       ((parent-is "list") parent-bol 0)
-       (no-node parent-bol 0)
-       (catch-all parent-bol satysfi-ts-mode-indent-offset))))
+       ((parent-is "block_text") parent-bol ,indent)
+       ((parent-is "inline_text") parent-bol ,indent)
+       ((parent-is "inline_text_list") parent-bol ,indent)
+       ((parent-is "inline_text_bullet_list") parent-bol ,indent)
+       ((parent-is "inline_text_bullet_item") parent-bol ,indent)
+       ((parent-is "inline_text_bullet_list") parent-bol ,indent)
+       ((parent-is "cmd_expr_arg") parent-bol ,indent)
+       ((parent-is "match_expr") parent-bol ,indent)
+       ((parent-is "parened_expr") parent-bol ,indent)
+       ((parent-is "list") parent-bol ,indent)
+       ((parent-is "record") parent-bol ,indent)
+       ((parent-is "tuple") parent-bol ,indent)
+       ((parent-is "application") parent-bol ,indent)
+       ((parent-is "binary_expr") parent-bol ,indent)
+       ((parent-is "sig_stmt") parent-bol ,indent)
+       ((parent-is "struct_stmt") parent-bol ,indent)
+       ((parent-is "let_stmt") parent-bol ,indent)
+       ((parent-is "let_inline_stmt") parent-bol ,indent)
+       ((parent-is "let_block_stmt") parent-bol ,indent)
+       ((parent-is "let_math_stmt") parent-bol ,indent)
+       ((parent-is "match_arm") parent-bol ,indent)
+       ((node-is ">") parent-bol ,indent-end)
+       ((node-is "}") parent-bol ,indent-end)
+       ((node-is "]") parent-bol ,indent-end)
+       ((node-is "|)") parent-bol ,indent-end)
+       ((node-is "end") parent-bol ,indent-end)
+       (no-node parent-bol ,indent-end)
+       (catch-all parent-bol ,indent))))
   "indent rules")
 
 (defvar satysfi-ts-mode--keywords
@@ -129,6 +150,21 @@
     "]")
   "brackets")
 
+(defvar satysfi-ts-mode--operator
+  '("?:"
+    "?->"
+    "->"
+    "<-"
+    "="
+    "!")
+  "operator")
+
+(defvar satysfi-ts-mode--include
+  '("@stage:"
+    "@require:"
+    "@import:")
+  "operator")
+
 (defvar satysfi-ts-mode--font-lock-settings
   (treesit-font-lock-rules
    :language 'satysfi
@@ -136,8 +172,12 @@
    '((comment) @font-lock-comment-face)
 
    :language 'satysfi
-   :feature 'keywords
+   :feature 'keyword
    `([,@satysfi-ts-mode--keywords] @font-lock-keyword-face)
+
+   :language 'satysfi
+   :feature 'operator
+   `([,@satysfi-ts-mode--operator (binary_operator)] @font-lock-operator-face)
    
    :language 'satysfi
    :feature 'string
@@ -168,7 +208,13 @@
       (treesit-major-mode-setup)
       
       (add-to-list 'auto-mode-alist '("\\.saty$'" . satysfi-ts-mode))
-      (add-to-list 'auto-mode-alist '("\\.satyh$'" . satysfi-ts-mode)))
+      (add-to-list 'auto-mode-alist '("\\.satyh$'" . satysfi-ts-mode))
+      
+      (setq-local treesit-font-lock-feature-list
+                  '((comment definition preprocessor)
+                    (keyword string type)
+                    (function constant label)
+                    (bracket delimiter operator variables))))
     
     (add-to-list
      'treesit-language-source-alist
