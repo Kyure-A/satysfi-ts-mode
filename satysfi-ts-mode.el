@@ -139,13 +139,10 @@
   '("{"
     "${"
     "}"
-
     "("
     ")"
-
     "(|"
     "|)"
-
     "["
     "]")
   "brackets")
@@ -193,6 +190,14 @@
    )
   "font-lock settings")
 
+(defvar satysfi-ts-mode-map (copy-keymap global-map))
+(defun satysfi-ts-mode--indent ()
+  (interactive)
+  (dotimes (i 4 t)
+    (insert " ")))
+
+(define-key satysfi-ts-mode-map (kbd "<tab>") 'satysfi-ts-mode--indent)
+
 (define-derived-mode satysfi-ts-mode prog-mode "SATySFi"
   "Major mode for editing SATySFi files, powered by tree-sitter."
   :group 'satysfi
@@ -201,25 +206,28 @@
     (progn
       (treesit-parser-create 'satysfi)
       (c-ts-common-comment-setup)
-
+      
+      (setq-local c-ts-common-indent-offset 'satysfi-ts-mode-indent-offset)
       (setq-local treesit-simple-indent-rules satysfi-ts-mode--indent-rules)
       (setq-local treesit-font-lock-settings satysfi-ts-mode--font-lock-settings)
       
       (treesit-major-mode-setup)
       
-      (add-to-list 'auto-mode-alist '("\\.saty$'" . satysfi-ts-mode))
-      (add-to-list 'auto-mode-alist '("\\.satyh$'" . satysfi-ts-mode))
-      
       (setq-local treesit-font-lock-feature-list
                   '((comment definition preprocessor)
                     (keyword string type)
                     (function constant label)
-                    (bracket delimiter operator variables))))
-    
-    (add-to-list
-     'treesit-language-source-alist
-     '(satysfi "https://github.com/monaqa/tree-sitter-satysfi"))
-    (treesit-install-language-grammar 'satysfi)))
+                    (bracket delimiter operator variables)))))
+  
+  (when (treesit-ready-p 'satysfi)
+    (add-to-list 'auto-mode-alist '("\\.saty$'" . satysfi-ts-mode))
+    (add-to-list 'auto-mode-alist '("\\.satyh$'" . satysfi-ts-mode))))
+
+;;;###autoload
+(with-eval-after-load 'treesit
+  (add-to-list 'treesit-language-source-alist
+               '(satysfi "https://github.com/monaqa/tree-sitter-satysfi"))
+  (treesit-install-language-grammar 'satysfi))
 
 (provide 'satysfi-ts-mode)
 ;;; satysfi-ts-mode.el ends here
