@@ -97,42 +97,42 @@
   "indent rules")
 
 (defvar satysfi-ts-mode--keywords
-  '( "and"
-     "as"
-     "block-cmd"
-     "command"
-     "constraint"
-     "direct"
-     "do"
-     "else"
-     "end"
-     "false"
-     "fun"
-     "if"
-     "in"
-     "inline-cmd"
-     "let"
-     "let-block"
-     "let-inline"
-     "let-math"
-     "let-mutable"
-     "let-rec"
-     "match"
-     "math-cmd"
-     "module"
-     "not"
-     "of"
-     "open"
-     "sig"
-     "struct"
-     "then"
-     "true"
-     "type"
-     "val"
-     "when"
-     "while"
-     "with"
-     "|")
+  '("and"
+    "as"
+    "block-cmd"
+    "command"
+    "constraint"
+    "direct"
+    "do"
+    "else"
+    "end"
+    "false"
+    "fun"
+    "if"
+    "in"
+    "inline-cmd"
+    "let"
+    "let-block"
+    "let-inline"
+    "let-math"
+    "let-mutable"
+    "let-rec"
+    "match"
+    "math-cmd"
+    "module"
+    "not"
+    "of"
+    "open"
+    "sig"
+    "struct"
+    "then"
+    "true"
+    "type"
+    "val"
+    "when"
+    "while"
+    "with"
+    "|")
   "keywords")
 
 (defvar satysfi-ts-mode--brackets
@@ -160,10 +160,16 @@
   '("@stage:"
     "@require:"
     "@import:")
-  "operator")
+  "include")
+
+(defvar satysfi-ts-mode)
 
 (defvar satysfi-ts-mode--font-lock-settings
   (treesit-font-lock-rules
+   :language 'satysfi
+   :feature 'bracket
+   '([,@satysfi-ts-mode--brackets] @font-lock-bracket-face)
+   
    :language 'satysfi
    :feature 'comment
    '((comment) @font-lock-comment-face)
@@ -182,22 +188,19 @@
 
    :language 'satysfi
    :feature 'type
-   '((type-name) @font-lock-type-face)
-   
-   ;; :language 'satysfi
-   ;; :feature 'variables
-   ;; '()
-   )
+   '((type-name) @font-lock-type-face))
   "font-lock settings")
 
 (defvar satysfi-ts-mode-map (copy-keymap global-map))
+
 (defun satysfi-ts-mode--indent ()
   (interactive)
-  (dotimes (i 4 t)
+  (dotimes (i satysfi-ts-mode-indent-offset t)
     (insert " ")))
 
 (define-key satysfi-ts-mode-map (kbd "<tab>") 'satysfi-ts-mode--indent)
 
+;;;###autoload
 (define-derived-mode satysfi-ts-mode prog-mode "SATySFi"
   "Major mode for editing SATySFi files, powered by tree-sitter."
   :group 'satysfi
@@ -210,14 +213,17 @@
       (setq-local c-ts-common-indent-offset 'satysfi-ts-mode-indent-offset)
       (setq-local treesit-simple-indent-rules satysfi-ts-mode--indent-rules)
       (setq-local treesit-font-lock-settings satysfi-ts-mode--font-lock-settings)
-      
-      (treesit-major-mode-setup)
+
+      (setq-local electric-indent-chars
+                  (append "{}()<>" electric-indent-chars))
       
       (setq-local treesit-font-lock-feature-list
-                  '((comment definition preprocessor)
+                  '((comment)
                     (keyword string type)
-                    (function constant label)
-                    (bracket delimiter operator variables)))))
+                    ;; (function constant label)
+                    (bracket operator)))
+      
+      (treesit-major-mode-setup)))
   
   (when (treesit-ready-p 'satysfi)
     (add-to-list 'auto-mode-alist '("\\.saty$'" . satysfi-ts-mode))
