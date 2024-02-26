@@ -175,14 +175,22 @@
    '((comment) @font-lock-comment-face)
 
    :language 'satysfi
+   :feature 'escape
+   '((inline_literal_escaped) @font-lock-escape-face)
+   
+   :language 'satysfi
    :feature 'function
-   '(;; [(inline_text_embedding) (block_text_embedding) (math_text_embedding) (inline_cmd_name) (block_cmd_name) (math_cmd_name)] @font-lock-function-name-face  
-     ;; embedding is special
-     (block_cmd_name (module_name) @font-lock-function-name-face) ;; special
+   '(;; stmt
      (let_stmt pattern: (identifier) @font-lock-function-name-face [arg: (_) @font-lock-function-name-face optarg: (_) @font-lock-function-name-face])
      (let_rec_inner pattern: (identifier) @font-lock-function-name-face)
+     ;; expr
      (application function: (identifier) @font-lock-function-name-face)
-     (application function: (modvar (identifier) @font-lock-function-name-face)))
+     (application function: (modvar (identifier) @font-lock-function-name-face))
+     ;; horizontal/vertical mode
+     (block_cmd_name (module_name) @font-lock-function-name-face)
+     [(inline_cmd_name) (block_cmd_name)] @font-lock-function-name-face
+     ;;; [(inline_text_embedding) (block_text_embedding) (math_text_embedding)] @font-lock-function-name-face
+     )
    
    :language 'satysfi
    :feature 'include
@@ -193,16 +201,39 @@
    `([,@satysfi-ts-mode--keywords] @font-lock-keyword-face)
 
    :language 'satysfi
+   :feature 'namespace
+   '((module_name) @font-lock-builtin-face
+     ;; expr
+     (modvar "." @font-lock-builtin-face))
+   
+   :language 'satysfi
+   :feature 'number
+   '([(literal_int) (literal_float) (literal_length) (literal_bool)] @font-lock-number-face)
+   
+   :language 'satysfi
    :feature 'operator
-   `([,@satysfi-ts-mode--operator (binary_operator)] @font-lock-operator-face)
+   `([,@satysfi-ts-mode--operator (binary_operator)] @font-lock-operator-face
+     ;; expr
+     (math_token ["^" "_"] @font-lock-operator-face))
+
+   :language 'satysfi
+   :feature 'parameter
+   '((type_param) @font-lock-function-name-face
+     ;; stmt
+     (let_inline_stmt [arg: (_) @font-lock-function-name-face optarg: (_) @font-lock-function-name-face])
+     (let_block_stmt [arg: (_) @font-lock-function-name-face optarg: (_) @font-lock-function-name-face])
+     ;; expr
+     (lambda arg: (_) @font-lock-function-name-face)
+     ;; horizontal/vertical mode
+     (math_cmd_name) @font-lock-function-name-face)
    
    :language 'satysfi
    :feature 'string
-   `((literal_string) @font-lock-string-face)
+   '((literal_string) @font-lock-string-face)
 
    :language 'satysfi
    :feature 'type
-   `((type-name) @font-lock-type-face))
+   '([(type_name) (variant_name)] @font-lock-type-face))
   "font-lock settings")
 
 (defvar satysfi-ts-mode-map (copy-keymap global-map))
