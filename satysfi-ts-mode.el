@@ -278,7 +278,8 @@
 (with-eval-after-load 'treesit
   (add-to-list 'treesit-language-source-alist
                '(satysfi "https://github.com/monaqa/tree-sitter-satysfi"))
-  (treesit-install-language-grammar 'satysfi))
+  (treesit-install-language-grammar 'satysfi)
+  (add-hook 'satysfi-ts-mode-hook (lambda () (setq comment-start "%") (setq comment-continue "") (setq comment-end ""))))
 
 (provide 'satysfi-ts-mode)
 ;;; satysfi-ts-mode.el ends here
