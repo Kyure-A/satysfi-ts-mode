@@ -43,7 +43,7 @@
 (declare-function treesit-search-subtree "treesit.c")
 
 (defgroup satysfi-ts-mode ()
-  "Better major mode for SATySFi"
+  "A tree-sitter based major-mode for SATySFi"
   :group 'tools
   :prefix "satysfi-ts-mode-"
   :link '(url-link "https://github.com/Kyure-A/satysfi-ts-mode"))
@@ -54,47 +54,6 @@
   :type 'integer
   :safe 'integerp
   :group 'satysfi)
-
-(defvar satysfi-ts-mode--syntax-table
-  (let ((table (make-syntax-table)))
-    (c-populate-syntax-table table)
-    (modify-syntax-entry ?\n "> b" table)
-    table)
-  "hoge")
-
-(defvar satysfi-ts-mode--indent-rules
-  (let ((indent-end satysfi-ts-mode-indent-offset)
-        (indent 0))
-    `((satysfi
-       ((parent-is "block_text") parent-bol ,indent)
-       ((parent-is "inline_text") parent-bol ,indent)
-       ((parent-is "inline_text_list") parent-bol ,indent)
-       ((parent-is "inline_text_bullet_list") parent-bol ,indent)
-       ((parent-is "inline_text_bullet_item") parent-bol ,indent)
-       ((parent-is "inline_text_bullet_list") parent-bol ,indent)
-       ((parent-is "cmd_expr_arg") parent-bol ,indent)
-       ((parent-is "match_expr") parent-bol ,indent)
-       ((parent-is "parened_expr") parent-bol ,indent)
-       ((parent-is "list") parent-bol ,indent)
-       ((parent-is "record") parent-bol ,indent)
-       ((parent-is "tuple") parent-bol ,indent)
-       ((parent-is "application") parent-bol ,indent)
-       ((parent-is "binary_expr") parent-bol ,indent)
-       ((parent-is "sig_stmt") parent-bol ,indent)
-       ((parent-is "struct_stmt") parent-bol ,indent)
-       ((parent-is "let_stmt") parent-bol ,indent)
-       ((parent-is "let_inline_stmt") parent-bol ,indent)
-       ((parent-is "let_block_stmt") parent-bol ,indent)
-       ((parent-is "let_math_stmt") parent-bol ,indent)
-       ((parent-is "match_arm") parent-bol ,indent)
-       ((node-is ">") parent-bol ,indent-end)
-       ((node-is "}") parent-bol ,indent-end)
-       ((node-is "]") parent-bol ,indent-end)
-       ((node-is "|)") parent-bol ,indent-end)
-       ((node-is "end") parent-bol ,indent-end)
-       (no-node parent-bol ,indent-end)
-       (catch-all parent-bol ,indent))))
-  "indent rules")
 
 (defvar satysfi-ts-mode--keywords
   '("and"
@@ -161,8 +120,6 @@
     "@require:"
     "@import:")
   "include")
-
-(defvar satysfi-ts-mode)
 
 (defvar satysfi-ts-mode--font-lock-settings
   (treesit-font-lock-rules
@@ -237,6 +194,67 @@
    :feature 'type
    '([(type_name) (variant_name)] @font-lock-type-face))
   "font-lock settings")
+
+(defvar satysfi-ts-mode--syntax-table
+  (let ((table (make-syntax-table)))
+    (c-populate-syntax-table table)
+    (modify-syntax-entry ?\n "> b" table)
+    table)
+  "hoge")
+
+(defvar satysfi-ts-mode--indent-rules
+  (let ((indent 0)
+        (indent-end satysfi-ts-mode-indent-offset)
+        (branch 0))
+    `((satysfi
+       ((parent-is "block_text") parent-bol ,indent)
+       ((parent-is "inline_text") parent-bol ,indent)
+       ((parent-is "inline_text_list") parent-bol ,indent)
+       ((parent-is "inline_text_bullet_list") parent-bol ,indent)
+       ((parent-is "inline_text_bullet_item") parent-bol ,indent)
+       ((parent-is "inline_text_bullet_list") parent-bol ,indent)
+       ((parent-is "cmd_expr_arg") parent-bol ,indent)
+       
+       ((parent-is "match_expr") parent-bol ,indent)
+       ((parent-is "parened_expr") parent-bol ,indent)
+       ((parent-is "list") parent-bol ,indent)
+       ((parent-is "record") parent-bol ,indent)
+       ((parent-is "tuple") parent-bol ,indent)
+       
+       ((parent-is "application") parent-bol ,indent)
+       ((parent-is "binary_expr") parent-bol ,indent)
+       
+       ((parent-is "sig_stmt") parent-bol ,indent)
+       ((parent-is "struct_stmt") parent-bol ,indent)
+       ((parent-is "let_stmt") parent-bol ,indent)
+       ((parent-is "let_inline_stmt") parent-bol ,indent)
+       ((parent-is "let_block_stmt") parent-bol ,indent)
+       ((parent-is "let_math_stmt") parent-bol ,indent)
+       
+       ((parent-is "match_arm") parent-bol ,indent)
+       
+       ((match ">" "block_text") parent-bol ,indent-end)
+       ((match "}" "inline_text") parent-bol ,indent-end)
+       ((match "}" "inline_text_list") parent-bol ,indent-end)
+       ((match "}" "inline_bullet_list") parent-bol ,indent-end)
+       ((match ")" "parened_expr") parent-bol ,indent-end)
+       ((match ")" "cmd_expr_arg") parent-bol ,indent-end)
+
+       
+       ((match "]" "list") parent-bol ,indent-end)
+       ((match "|)" "record") parent-bol ,indent-end)
+       ((match ")" "tuple") parent-bol ,indent-end)
+
+       ((node-is ")") parent-bol ,branch)
+       ((node-is "]") parent-bol ,branch)
+       ((node-is "}") parent-bol ,branch)
+       ((node-is "|)") parent-bol ,branch)
+       ((node-is "end") parent-bol ,branch)
+       ((match ">" "block_text") parent-bol ,branch)
+       
+       (no-node parent-bol ,indent-end)
+       (catch-all parent-bol ,indent))))
+  "indent rules")
 
 (defvar satysfi-ts-mode-map (copy-keymap global-map))
 
