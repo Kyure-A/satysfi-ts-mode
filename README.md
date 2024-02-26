@@ -9,8 +9,10 @@ A tree-sitter based major-mode for SATySFi
 ## Difference
 Compared to [satysfi-mode](https://github.com/gfngfn/satysfi.el), it is superior in the following ways: 
 - Indentation
+  
   Relatively good.
 - Syntax Highlighting
+  
   In satysfi-mode, the color theme was not reflected for syntax highlighting, but this major mode reflects color theme colors based on tree-sitter.
 
 ## image
