@@ -121,6 +121,7 @@
     "@import:")
   "include")
 
+;; see https://github.com/monaqa/tree-sitter-satysfi/blob/master/queries/highlights.scm
 (defvar satysfi-ts-mode--font-lock-settings
   (treesit-font-lock-rules
    :language 'satysfi
@@ -202,6 +203,7 @@
     table)
   "hoge")
 
+;; see https://github.com/monaqa/tree-sitter-satysfi/blob/master/queries/indents.scm
 (defvar satysfi-ts-mode--indent-rules
   (let ((indent 0)
         (indent-end satysfi-ts-mode-indent-offset)
