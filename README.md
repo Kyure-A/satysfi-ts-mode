@@ -15,5 +15,5 @@ Compared to [satysfi-mode](https://github.com/gfngfn/satysfi.el), it is superior
 
 ## image
 satysfi-mode <- -> satysfi-ts-mode
-![./img/official.png]
-![./img/ts.png]
+![satysfi-mode](./img/official.png)
+![satysfi-ts-mode](./img/ts.png)
