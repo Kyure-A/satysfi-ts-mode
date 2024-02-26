@@ -58,7 +58,7 @@
 (defvar satysfi-ts-mode--syntax-table
   (let ((table (make-syntax-table)))
     (c-populate-syntax-table table)
-    ;; (modify-syntax-entry ?_ "" table)
+    (modify-syntax-entry ?\n "> b" table)
     table)
   "hoge")
 
@@ -175,6 +175,20 @@
    '((comment) @font-lock-comment-face)
 
    :language 'satysfi
+   :feature 'function
+   '(;; [(inline_text_embedding) (block_text_embedding) (math_text_embedding) (inline_cmd_name) (block_cmd_name) (math_cmd_name)] @font-lock-function-name-face  
+     ;; embedding is special
+     (block_cmd_name (module_name) @font-lock-function-name-face) ;; special
+     (let_stmt pattern: (identifier) @font-lock-function-name-face [arg: (_) @font-lock-function-name-face optarg: (_) @font-lock-function-name-face])
+     (let_rec_inner pattern: (identifier) @font-lock-function-name-face)
+     (application function: (identifier) @font-lock-function-name-face)
+     (application function: (modvar (identifier) @font-lock-function-name-face)))
+   
+   :language 'satysfi
+   :feature 'include
+   `([,@satysfi-ts-mode--include] @font-lock-keyword-face)
+
+   :language 'satysfi
    :feature 'keyword
    `([,@satysfi-ts-mode--keywords] @font-lock-keyword-face)
 
@@ -184,11 +198,11 @@
    
    :language 'satysfi
    :feature 'string
-   '((literal_string) @font-lock-string-face)
+   `((literal_string) @font-lock-string-face)
 
    :language 'satysfi
    :feature 'type
-   '((type-name) @font-lock-type-face))
+   `((type-name) @font-lock-type-face))
   "font-lock settings")
 
 (defvar satysfi-ts-mode-map (copy-keymap global-map))
@@ -216,12 +230,12 @@
 
       (setq-local electric-indent-chars
                   (append "{}()<>" electric-indent-chars))
-      
+
       (setq-local treesit-font-lock-feature-list
-                  '((comment)
-                    (keyword string type)
-                    ;; (function constant label)
-                    (bracket operator)))
+                  '((comment definition preprocessor)
+                    (function constant keyword string type variables)
+                    (annotation expression literal)
+                    (bracket delimiter operator)))
       
       (treesit-major-mode-setup)))
   
