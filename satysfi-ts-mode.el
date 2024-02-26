@@ -168,7 +168,9 @@
   (treesit-font-lock-rules
    :language 'satysfi
    :feature 'bracket
-   '([,@satysfi-ts-mode--brackets] @font-lock-bracket-face)
+   '([,@satysfi-ts-mode--brackets] @font-lock-bracket-face
+     (block_text ["<" "'<"] @font-lock-bracket-face ">"  @font-lock-bracket-face)
+     [";" ":" "," (inline_text_bullet_star) "#" ] @font-lock-bracket-face)
    
    :language 'satysfi
    :feature 'comment
@@ -187,25 +189,25 @@
      (application function: (identifier) @font-lock-function-name-face)
      (application function: (modvar (identifier) @font-lock-function-name-face))
      ;; horizontal/vertical mode
-     (block_cmd_name (module_name) @font-lock-function-name-face)
-     [(inline_cmd_name) (block_cmd_name)] @font-lock-function-name-face
-     ;;; [(inline_text_embedding) (block_text_embedding) (math_text_embedding)] @font-lock-function-name-face
+     (block_cmd_name (module_name) @font-lock-builtin-face)
+     [(inline_cmd_name) (block_cmd_name)] @font-lock-builtin-face
+     ;;; [(inline_text_embedding) (block_text_embedding) (math_text_embedding)] @font-lock-builtin-face
      )
    
    :language 'satysfi
    :feature 'include
-   `([,@satysfi-ts-mode--include] @font-lock-keyword-face)
+   `([,@satysfi-ts-mode--include] @font-lock-builtin-face)
 
    :language 'satysfi
    :feature 'keyword
-   `([,@satysfi-ts-mode--keywords] @font-lock-keyword-face)
+   `([,@satysfi-ts-mode--keywords] @font-lock-builtin-face)
 
    :language 'satysfi
    :feature 'namespace
-   '((module_name) @font-lock-builtin-face
+   '([(module_name) (header_require) (header_import)] @font-lock-builtin-face
      ;; expr
      (modvar "." @font-lock-builtin-face))
-   
+
    :language 'satysfi
    :feature 'number
    '([(literal_int) (literal_float) (literal_length) (literal_bool)] @font-lock-number-face)
