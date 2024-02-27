@@ -1,11 +1,11 @@
-;;; satysfi-ts-mode.el --- Better major mode for SATySFi  -*- lexical-binding: t; -*-
+;;; satysfi-ts-mode.el --- A tree-sitter based major-mode for SATySFi  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2024 Kyure_A
 
 ;; Author: Kyure_A <twitter.com/kyureq>
-;; Keywords: tools
+;; Keywords: languages
 
-;; Version: 0.0.1
+;; Version: 0.1.0
 ;; Package-Requires: ((emacs "29.1"))
 ;; URL: https://github.com/Kyure-A/satysfi-ts-mode
 
@@ -26,7 +26,7 @@
 
 ;;; Commentary:
 
-;; Better major mode for SATySFi
+;; A tree-sitter based major-mode for SATySFi
 
 ;;; Code:
 
@@ -49,7 +49,7 @@
   :link '(url-link "https://github.com/Kyure-A/satysfi-ts-mode"))
 
 (defcustom satysfi-ts-mode-indent-offset 4
-  "indent offset"
+  "Indent offset for satysfi-ts-mode"
   :version "29.1"
   :type 'integer
   :safe 'integerp
@@ -92,7 +92,7 @@
     "while"
     "with"
     "|")
-  "keywords")
+  "List of keywords used in the text of SATySFi")
 
 (defvar satysfi-ts-mode--brackets
   '("{"
@@ -104,7 +104,7 @@
     "|)"
     "["
     "]")
-  "brackets")
+  "List of brackets used in the text of SATySFi")
 
 (defvar satysfi-ts-mode--operator
   '("?:"
@@ -113,13 +113,13 @@
     "<-"
     "="
     "!")
-  "operator")
+  "List of operators used in the text of SATySFi")
 
 (defvar satysfi-ts-mode--include
   '("@stage:"
     "@require:"
     "@import:")
-  "include")
+  "List of includes used in the text of SATySFi")
 
 ;; see https://github.com/monaqa/tree-sitter-satysfi/blob/master/queries/highlights.scm
 (defvar satysfi-ts-mode--font-lock-settings
@@ -194,20 +194,20 @@
    :language 'satysfi
    :feature 'type
    '([(type_name) (variant_name)] @font-lock-type-face))
-  "font-lock settings")
+  "Font-lock settings for satysfi-ts-mode")
 
 (defvar satysfi-ts-mode--syntax-table
   (let ((table (make-syntax-table)))
     (c-populate-syntax-table table)
     (modify-syntax-entry ?\n "> b" table)
     table)
-  "hoge")
+  "Syntax table for satysfi-ts-mode")
 
 ;; see https://github.com/monaqa/tree-sitter-satysfi/blob/master/queries/indents.scm
 (defvar satysfi-ts-mode--indent-rules
   (let ((indent 0)
         (indent-end satysfi-ts-mode-indent-offset)
-        (branch 0))
+        (branch satysfi-ts-mode-indent-offset))
     `((satysfi
        ((parent-is "block_text") parent-bol ,indent)
        ((parent-is "inline_text") parent-bol ,indent)
@@ -256,11 +256,14 @@
        
        (no-node parent-bol ,indent-end)
        (catch-all parent-bol ,indent))))
-  "indent rules")
+  "Indent rules for satysfi-ts-mode")
 
-(defvar satysfi-ts-mode-map (copy-keymap global-map))
+(defvar satysfi-ts-mode-map
+  (copy-keymap global-map)
+  "Mode map for satysfi-ts-mode")
 
 (defun satysfi-ts-mode--indent ()
+  "Indent based on `satysfi-ts-mode-indent-offset`"
   (interactive)
   (dotimes (i satysfi-ts-mode-indent-offset t)
     (insert " ")))

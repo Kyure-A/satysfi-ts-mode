@@ -1,9 +1,9 @@
 (package "satysfi-ts-mode"
-         "0.0.0"
-         "Better major mode for SATySFi")
+         "0.1.0"
+         "A tree-sitter based major-mode for SATySFi")
 
 (website-url "https://github.com/Kyure-A/satysfi-ts-mode")
-(keywords "plugin")
+(keywords "languages")
 
 (package-file "satysfi-ts-mode.el")
 
@@ -12,7 +12,7 @@
 (source "gnu")
 (source "melpa")
 
-(depends-on "emacs" "24.1")
+(depends-on "emacs" "29.1")
 
 (development
  (depends-on "elsa")
