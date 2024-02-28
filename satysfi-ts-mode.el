@@ -143,8 +143,11 @@
      ;; horizontal/vertical mode
      (block_cmd_name (module_name) @font-lock-builtin-face)
      [(inline_cmd_name) (block_cmd_name)] @font-lock-builtin-face
-     ;;; [(inline_text_embedding) (block_text_embedding) (math_text_embedding)] @font-lock-builtin-face
-     )
+     [
+      (inline_text_embedding)
+      (block_text_embedding)
+      ;;(math_text_embedding)
+      ] @font-lock-builtin-face)
    
    :language 'satysfi
    :feature 'include
