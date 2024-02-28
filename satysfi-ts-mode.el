@@ -42,14 +42,8 @@
 (declare-function treesit-node-type "treesit.c")
 (declare-function treesit-search-subtree "treesit.c")
 
-(defgroup satysfi-ts-mode ()
-  "A tree-sitter based major-mode for SATySFi"
-  :group 'tools
-  :prefix "satysfi-ts-mode-"
-  :link '(url-link "https://github.com/Kyure-A/satysfi-ts-mode"))
-
 (defcustom satysfi-ts-mode-indent-offset 4
-  "Indent offset for satysfi-ts-mode"
+  "Indent offset for 'satysfi-ts-mode'."
   :version "29.1"
   :type 'integer
   :safe 'integerp
@@ -92,7 +86,7 @@
     "while"
     "with"
     "|")
-  "List of keywords used in the text of SATySFi")
+  "List of keywords used in the text of SATySFi.")
 
 (defvar satysfi-ts-mode--brackets
   '("{"
@@ -104,7 +98,7 @@
     "|)"
     "["
     "]")
-  "List of brackets used in the text of SATySFi")
+  "List of brackets used in the text of SATySFi.")
 
 (defvar satysfi-ts-mode--operator
   '("?:"
@@ -113,13 +107,13 @@
     "<-"
     "="
     "!")
-  "List of operators used in the text of SATySFi")
+  "List of operators used in the text of SATySFi.")
 
 (defvar satysfi-ts-mode--include
   '("@stage:"
     "@require:"
     "@import:")
-  "List of includes used in the text of SATySFi")
+  "List of includes used in the text of SATySFi.")
 
 ;; see https://github.com/monaqa/tree-sitter-satysfi/blob/master/queries/highlights.scm
 (defvar satysfi-ts-mode--font-lock-settings
@@ -194,14 +188,14 @@
    :language 'satysfi
    :feature 'type
    '([(type_name) (variant_name)] @font-lock-type-face))
-  "Font-lock settings for satysfi-ts-mode")
+  "Font-lock settings for 'satysfi-ts-mode'.")
 
 (defvar satysfi-ts-mode--syntax-table
   (let ((table (make-syntax-table)))
     (c-populate-syntax-table table)
     (modify-syntax-entry ?\n "> b" table)
     table)
-  "Syntax table for satysfi-ts-mode")
+  "Syntax table for 'satysfi-ts-mode'.")
 
 ;; see https://github.com/monaqa/tree-sitter-satysfi/blob/master/queries/indents.scm
 (defvar satysfi-ts-mode--indent-rules
@@ -256,19 +250,26 @@
        
        (no-node parent-bol ,indent-end)
        (catch-all parent-bol ,indent))))
-  "Indent rules for satysfi-ts-mode")
+  "Indent rules for 'satysfi-ts-mode'.")
 
 (defvar satysfi-ts-mode-map
   (copy-keymap global-map)
-  "Mode map for satysfi-ts-mode")
+  "Mode map for 'satysfi-ts-mode'.")
 
 (defun satysfi-ts-mode--indent ()
-  "Indent based on `satysfi-ts-mode-indent-offset`"
+  "Indent based on 'satysfi-ts-mode-indent-offset'."
   (interactive)
   (dotimes (i satysfi-ts-mode-indent-offset t)
     (insert " ")))
 
 (define-key satysfi-ts-mode-map (kbd "<tab>") 'satysfi-ts-mode--indent)
+
+(defun satysfi-ts-mode-install-grammar ()
+  "Install language grammar for SATySFi"
+  (interactive)
+  (add-to-list 'treesit-language-source-alist
+               '(satysfi "https://github.com/monaqa/tree-sitter-satysfi"))
+      (treesit-install-language-grammar 'satysfi))
 
 ;;;###autoload
 (define-derived-mode satysfi-ts-mode prog-mode "SATySFi"
@@ -296,18 +297,9 @@
       (treesit-major-mode-setup)))
   
   (when (treesit-ready-p 'satysfi)
+    (add-hook 'satysfi-ts-mode-hook (lambda () (setq comment-start "%") (setq comment-continue "") (setq comment-end "")))
     (add-to-list 'auto-mode-alist '("\\.saty$'" . satysfi-ts-mode))
     (add-to-list 'auto-mode-alist '("\\.satyh$'" . satysfi-ts-mode))))
-
-;;;###autoload
-(with-eval-after-load 'treesit
-  (add-to-list 'treesit-language-source-alist
-               '(satysfi "https://github.com/monaqa/tree-sitter-satysfi"))
-
-  (when (and (not (treesit-language-available-p 'satysfi)) (yes-or-no-p "Language grammer for SATySFi is not installed. Install it?"))
-    (treesit-install-language-grammar 'satysfi))
-  
-  (add-hook 'satysfi-ts-mode-hook (lambda () (setq comment-start "%") (setq comment-continue "") (setq comment-end ""))))
 
 (provide 'satysfi-ts-mode)
 ;;; satysfi-ts-mode.el ends here
