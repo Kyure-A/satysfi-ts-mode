@@ -23,7 +23,7 @@ jobs:
         pip install ~/melpazoid
     - name: Run
       env:
-        LOCAL_REPO: $GITHUB_WORKSPACE
+        LOCAL_REPO: ${{ github.workspace }}
         # RECIPE is your recipe as written for MELPA:
         RECIPE: (satysfi-ts-mode :repo "Kyure-A/satysfi-ts-mode" :fetcher github)
         # set this to false (or remove it) if the package isn't on MELPA:
