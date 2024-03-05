@@ -255,13 +255,13 @@
        (catch-all parent-bol ,indent))))
   "Indent rules for \='satysfi-ts-mode\='.")
 
-(cl-defun satysfi-ts-mode--indent (&optional (i satysfi-ts-mode-indent-offset))
-  "Indent based on \='satysfi-ts-mode-indent-offset\='."
+(cl-defun satysfi-ts-mode--indent (&optional (offset satysfi-ts-mode-indent-offset))
+  "Indent based on \='satysfi-ts-mode-indent-offset\=' (OFFSET)."
   (interactive)
-  (if (= i 1)
+  (if (= offset 1)
       (insert " ")
     (insert " ")
-    (satysfi-ts-mode--indent (- i 1))))
+    (satysfi-ts-mode--indent (- offset 1))))
 
 (defvar satysfi-ts-mode-map
   (let ((keymap (make-sparse-keymap)))
