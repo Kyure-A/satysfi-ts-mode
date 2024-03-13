@@ -293,10 +293,10 @@
                   (append "{}()<>" electric-indent-chars))
 
       (setq-local treesit-font-lock-feature-list
-                  '((comment definition preprocessor)
-                    (function constant keyword string type variables)
+                  '((comment escape)
+                    (function constant keyword string number type include namespace parameter)
                     (annotation expression literal)
-                    (bracket delimiter operator)))
+                    (bracket operator)))
       
       (treesit-major-mode-setup)))
   
