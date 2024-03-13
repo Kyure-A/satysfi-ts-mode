@@ -43,7 +43,7 @@
 (declare-function treesit-search-subtree "treesit.c")
 
 (defcustom satysfi-ts-mode-indent-offset 4
-  "Indent offset for \='satysfi-ts-mode\='."
+  "Indent offset for `satysfi-ts-mode'."
   :version "29.1"
   :type 'integer
   :safe 'integerp
@@ -191,14 +191,14 @@
    :language 'satysfi
    :feature 'type
    '([(type_name) (variant_name)] @font-lock-type-face))
-  "Font-lock settings for \='satysfi-ts-mode\='.")
+  "Font-lock settings for `satysfi-ts-mode'.")
 
 (defvar satysfi-ts-mode--syntax-table
   (let ((table (make-syntax-table)))
     (c-populate-syntax-table table)
     (modify-syntax-entry ?\n "> b" table)
     table)
-  "Syntax table for \='satysfi-ts-mode\='.")
+  "Syntax table for `satysfi-ts-mode'.")
 
 ;; see https://github.com/monaqa/tree-sitter-satysfi/blob/master/queries/indents.scm
 (defvar satysfi-ts-mode--indent-rules
@@ -253,10 +253,10 @@
        
        (no-node parent-bol ,indent-end)
        (catch-all parent-bol ,indent))))
-  "Indent rules for \='satysfi-ts-mode\='.")
+  "Indent rules for `satysfi-ts-mode'.")
 
 (cl-defun satysfi-ts-mode--indent (&optional (offset satysfi-ts-mode-indent-offset))
-  "Indent based on \='satysfi-ts-mode-indent-offset\=' (OFFSET)."
+  "Indent based on `satysfi-ts-mode-indent-offset' (OFFSET)."
   (interactive)
   (if (= offset 1)
       (insert " ")
@@ -266,7 +266,7 @@
 (defvar satysfi-ts-mode-map
   (let ((keymap (make-sparse-keymap)))
     (define-key keymap (kbd "<tab>") 'satysfi-ts-mode--indent))
-  "Mode map for \='satysfi-ts-mode\='.")
+  "Mode map for `satysfi-ts-mode'.")
 
 (defun satysfi-ts-mode-install-grammar ()
   "Install language grammar for SATySFi."
