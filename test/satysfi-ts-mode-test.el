@@ -26,6 +26,14 @@
 ;;; Code:
 
 (require 'ert)
+(require 'ert-x)
+(require 'treesit)
+
+(declare-function treesit-install-language-grammar "treesit.c")
+
+(if (and (treesit-available-p) (boundp 'treesit-language-source-alist))
+    (unless (treesit-language-available-p 'satysfi)
+      (treesit-install-language-grammar 'satysfi)))
 
 (require 'undercover)
 (undercover "*.el"
