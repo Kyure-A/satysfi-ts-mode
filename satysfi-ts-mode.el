@@ -59,7 +59,6 @@
     "do"
     "else"
     "end"
-    "false"
     "fun"
     "if"
     "in"
@@ -79,7 +78,6 @@
     "sig"
     "struct"
     "then"
-    "true"
     "type"
     "val"
     "when"
@@ -156,16 +154,16 @@
    :language 'satysfi
    :feature 'keyword
    `([,@satysfi-ts-mode--keywords] @font-lock-builtin-face)
-
+   
    :language 'satysfi
    :feature 'namespace
-   '([(module_name) (header_require) (header_import)] @font-lock-builtin-face
+   '([(module_name) (headers)] @font-lock-builtin-face
      ;; expr
      (modvar "." @font-lock-builtin-face))
 
    :language 'satysfi
    :feature 'number
-   '([(literal_int) (literal_float) (literal_length) (literal_bool)] @font-lock-number-face)
+   `([(literal_int) (literal_float) (literal_length) "true" "false"] @font-lock-number-face)
    
    :language 'satysfi
    :feature 'operator
