@@ -16,6 +16,10 @@ Compared to [satysfi-mode](https://github.com/gfngfn/satysfi.el), it is superior
   In satysfi-mode, the color theme was not reflected for syntax highlighting, but this major mode reflects color theme colors based on tree-sitter.
 
 ## image
-satysfi-mode <- -> satysfi-ts-mode
+The color theme used in this screenshot is Monokai.
+
+### satysfi-mode 
 ![satysfi-mode](./img/official.png)
-![satysfi-ts-mode](./img/ts.png)
+
+### satysfi-ts-mode
+![satysfi-ts-mode](./img/treesit.png)
