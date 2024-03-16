@@ -113,19 +113,31 @@
     "@import:")
   "List of includes used in the text of SATySFi.")
 
+(defvar satysfi-ts-mode--delimiters
+  '(";"
+    ":"
+    ","
+    "#")
+  "List of delimiters used in the text of SATySFi.")
+
 ;; see https://github.com/monaqa/tree-sitter-satysfi/blob/master/queries/highlights.scm
 (defvar satysfi-ts-mode--font-lock-settings
   (treesit-font-lock-rules
    :language 'satysfi
    :feature 'bracket
    '([,@satysfi-ts-mode--brackets] @font-lock-bracket-face
-     (block_text ["<" "'<"] @font-lock-bracket-face ">"  @font-lock-bracket-face)
-     [";" ":" "," (inline_text_bullet_star) "#" ] @font-lock-bracket-face)
+     (block_text ["<" "'<"] @font-lock-bracket-face ">"  @font-lock-bracket-face))
    
    :language 'satysfi
    :feature 'comment
    '((comment) @font-lock-comment-face)
 
+   :language 'satysfi
+   :feature 'delimiter
+   '([,@satysfi-ts-mode--delimiters (inline_text_bullet_star)] @font-lock-delimiter-face
+     (inline_text_list "|" @font-lock-delimiter-face)
+     (math_list "|" @font-lock-delimiter-face))
+   
    :language 'satysfi
    :feature 'escape
    '((inline_literal_escaped) @font-lock-escape-face)
