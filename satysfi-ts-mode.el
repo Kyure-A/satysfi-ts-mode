@@ -98,7 +98,7 @@
     "]")
   "List of brackets used in the text of SATySFi.")
 
-(defvar satysfi-ts-mode--operator
+(defvar satysfi-ts-mode--operators
   '("?:"
     "?->"
     "->"
@@ -107,7 +107,7 @@
     "!")
   "List of operators used in the text of SATySFi.")
 
-(defvar satysfi-ts-mode--include
+(defvar satysfi-ts-mode--includes
   '("@stage:"
     "@require:"
     "@import:")
@@ -161,7 +161,7 @@
    
    :language 'satysfi
    :feature 'include
-   `([,@satysfi-ts-mode--include] @font-lock-builtin-face)
+   `([,@satysfi-ts-mode--includes] @font-lock-builtin-face)
 
    :language 'satysfi
    :feature 'keyword
@@ -179,7 +179,7 @@
    
    :language 'satysfi
    :feature 'operator
-   `([,@satysfi-ts-mode--operator (binary_operator)] @font-lock-operator-face
+   `([,@satysfi-ts-mode--operators (binary_operator)] @font-lock-operator-face
      ;; expr
      (math_token ["^" "_"] @font-lock-operator-face))
 
