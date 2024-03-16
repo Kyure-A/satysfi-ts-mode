@@ -296,7 +296,7 @@
         (add-hook 'satysfi-ts-mode-hook (lambda () (setq comment-start "%") (setq comment-continue "") (setq comment-end "")))
         (add-to-list 'auto-mode-alist '("\\.saty\\'" . satysfi-ts-mode))
         (add-to-list 'auto-mode-alist '("\\.satyh\\'" . satysfi-ts-mode)))
-    (message "satysfi-language-server is not installed. To install, run \"M-x satysfi-ts-mode-install-grammar\".")))
+    (message "satysfi-language-grammar is not installed. To install, run \"M-x satysfi-ts-mode-install-grammar\".")))
 
 (provide 'satysfi-ts-mode)
 ;;; satysfi-ts-mode.el ends here
