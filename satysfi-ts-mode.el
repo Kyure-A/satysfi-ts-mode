@@ -278,30 +278,25 @@
   "Major mode for editing SATySFi files, powered by tree-sitter."
   :group 'satysfi
   :syntax-table satysfi-ts-mode--syntax-table
-  (when (treesit-ready-p 'satysfi)
-    (progn
-      (treesit-parser-create 'satysfi)
-      (c-ts-common-comment-setup)
-      
-      (setq-local c-ts-common-indent-offset 'satysfi-ts-mode-indent-offset)
-      (setq-local treesit-simple-indent-rules satysfi-ts-mode--indent-rules)
-      (setq-local treesit-font-lock-settings satysfi-ts-mode--font-lock-settings)
-
-      (setq-local electric-indent-chars
-                  (append "{}()<>" electric-indent-chars))
-
-      (setq-local treesit-font-lock-feature-list
-                  '((comment escape)
-                    (function constant keyword string number type include namespace parameter)
-                    (annotation expression literal)
-                    (bracket operator)))
-      
-      (treesit-major-mode-setup)))
-  
-  (when (treesit-ready-p 'satysfi)
-    (add-hook 'satysfi-ts-mode-hook (lambda () (setq comment-start "%") (setq comment-continue "") (setq comment-end "")))
-    (add-to-list 'auto-mode-alist '("\\.saty\\'" . satysfi-ts-mode))
-    (add-to-list 'auto-mode-alist '("\\.satyh\\'" . satysfi-ts-mode))))
+  (if (treesit-ready-p 'satysfi)
+      (progn
+        (treesit-parser-create 'satysfi)
+        (c-ts-common-comment-setup)
+        (setq-local c-ts-common-indent-offset 'satysfi-ts-mode-indent-offset)
+        (setq-local treesit-simple-indent-rules satysfi-ts-mode--indent-rules)
+        (setq-local treesit-font-lock-settings satysfi-ts-mode--font-lock-settings)
+        (setq-local electric-indent-chars
+                    (append "{}()<>" electric-indent-chars))
+        (setq-local treesit-font-lock-feature-list
+                    '((comment escape)
+                      (function constant keyword string number type include namespace parameter)
+                      (annotation expression literal)
+                      (bracket operator)))
+        (treesit-major-mode-setup)
+        (add-hook 'satysfi-ts-mode-hook (lambda () (setq comment-start "%") (setq comment-continue "") (setq comment-end "")))
+        (add-to-list 'auto-mode-alist '("\\.saty\\'" . satysfi-ts-mode))
+        (add-to-list 'auto-mode-alist '("\\.satyh\\'" . satysfi-ts-mode)))
+    (message "satysfi-language-server is not installed. To install, run \"M-x satysfi-ts-mode-install-grammar\".")))
 
 (provide 'satysfi-ts-mode)
 ;;; satysfi-ts-mode.el ends here
