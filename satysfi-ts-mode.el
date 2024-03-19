@@ -273,10 +273,11 @@
     (insert " ")
     (satysfi-ts-mode--indent (- offset 1))))
 
-(defvar satysfi-ts-mode-map (make-sparse-keymap)
+(defvar satysfi-ts-mode-map
+  (let ((km (make-sparse-keymap)))
+    (define-key km (kbd "<tab>") 'satysfi-ts-mode--indent)
+    km)
   "Mode map for `satysfi-ts-mode'.")
-
-(define-key satysfi-ts-mode-map (kbd "<tab>") 'satysfi-ts-mode--indent)
 
 (defun satysfi-ts-mode-install-grammar ()
   "Install language grammar for SATySFi."
