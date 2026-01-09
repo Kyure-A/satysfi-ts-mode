@@ -148,7 +148,7 @@
    :language 'satysfi
    :feature 'field
    '((type_record_unit (identifier) @font-lock-property-face)
-     (record_unit . (identifier) @font-lock-property-face))
+     (record_unit (identifier) @font-lock-property-face))
 
    :language 'satysfi
    :feature 'function
