@@ -59,6 +59,7 @@
     "do"
     "else"
     "end"
+    "false"
     "fun"
     "if"
     "in"
@@ -83,6 +84,7 @@
     "when"
     "while"
     "with"
+    "true"
     "|")
   "List of keywords used in the text of SATySFi.")
 
@@ -175,11 +177,13 @@
 
    :language 'satysfi
    :feature 'number
-   `([(literal_int) (literal_float) (literal_length) "true" "false"] @font-lock-number-face)
+   `([(literal_int) (literal_float) (literal_length)] @font-lock-number-face)
    
    :language 'satysfi
    :feature 'operator
    `([,@satysfi-ts-mode--operators (binary_operator)] @font-lock-operator-face
+     (type_prod "*") @font-lock-operator-face
+     (type_list "?") @font-lock-operator-face
      ;; expr
      (math_token ["^" "_"] @font-lock-operator-face))
 
