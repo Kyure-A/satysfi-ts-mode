@@ -2,6 +2,8 @@
 
 A tree-sitter based major-mode for SATySFi
 
+[![MELPA](https://img.shields.io/badge/MELPA-satysfi--ts--mode-orange.svg)](https://melpa.org/#/satysfi-ts-mode)
+
 > [!NOTE]
 > This package is based on Emacs 29's built-in [`treesit`](treesit) and `c-ts-common` features.
 > `satysfi-ts-mode` was tested on [5519c54](https://github.com/monaqa/tree-sitter-satysfi/commit/5519c547418ecb31ac7d63e64653aed726b5d1c3) in [tree-sitter-satysfi](https://github.com/monaqa/tree-sitter-satysfi).
