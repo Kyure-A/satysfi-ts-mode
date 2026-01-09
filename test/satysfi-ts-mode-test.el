@@ -43,5 +43,78 @@
 
 (require 'satysfi-ts-mode)
 
+(defun satysfi-ts-mode-test--face-at (pos)
+  "Return face or face list at POS."
+  (let* ((face (get-text-property pos 'face))
+         (lock-face (get-text-property pos 'font-lock-face))
+         (combined (delq nil (append (if (listp face) face (list face))
+                                     (if (listp lock-face) lock-face (list lock-face))))))
+    (if combined combined nil)))
+
+(defun satysfi-ts-mode-test--face-matches-p (pos face)
+  "Return non-nil if FACE is applied at POS."
+  (memq face (satysfi-ts-mode-test--face-at pos)))
+
+(defun satysfi-ts-mode-test--pos (needle)
+  "Return start position of NEEDLE in current buffer."
+  (save-excursion
+    (goto-char (point-min))
+    (search-forward needle)
+    (- (point) (length needle))))
+
+(defmacro satysfi-ts-mode-test--with-buffer (content &rest body)
+  "Create temp buffer with CONTENT and run BODY in `satysfi-ts-mode'."
+  (declare (indent 1))
+  `(with-temp-buffer
+     (insert ,content)
+     (satysfi-ts-mode)
+     (skip-unless (treesit-ready-p 'satysfi))
+     (font-lock-mode 1)
+     (font-lock-ensure)
+     ,@body))
+
+(ert-deftest satysfi-ts-mode-test-font-lock-keywords-operators ()
+  (satysfi-ts-mode-test--with-buffer
+      "let x = true\nlet y = false\nlet z = a :: b\n"
+    (should (satysfi-ts-mode-test--face-matches-p
+             (satysfi-ts-mode-test--pos "true")
+             'font-lock-builtin-face))
+    (should (satysfi-ts-mode-test--face-matches-p
+             (satysfi-ts-mode-test--pos "false")
+             'font-lock-builtin-face))
+    (should (satysfi-ts-mode-test--face-matches-p
+             (satysfi-ts-mode-test--pos "::")
+             'font-lock-operator-face))))
+
+(ert-deftest satysfi-ts-mode-test-font-lock-type-operators ()
+  (satysfi-ts-mode-test--with-buffer
+      "type t = int * int\ntype u = [int?] math-cmd\n"
+    (should (satysfi-ts-mode-test--face-matches-p
+             (satysfi-ts-mode-test--pos "*")
+             'font-lock-operator-face))
+    (should (satysfi-ts-mode-test--face-matches-p
+             (satysfi-ts-mode-test--pos "?")
+             'font-lock-operator-face))))
+
+(ert-deftest satysfi-ts-mode-test-font-lock-record-fields ()
+  (satysfi-ts-mode-test--with-buffer
+      "let r = (| foo = 1; bar = 2 |)\ntype rec = (| baz : int |)\n"
+    (should (satysfi-ts-mode-test--face-matches-p
+             (satysfi-ts-mode-test--pos "foo")
+             'font-lock-property-face))
+    (should (satysfi-ts-mode-test--face-matches-p
+             (satysfi-ts-mode-test--pos "bar")
+             'font-lock-property-face))
+    (should (satysfi-ts-mode-test--face-matches-p
+             (satysfi-ts-mode-test--pos "baz")
+             'font-lock-property-face))))
+
+(ert-deftest satysfi-ts-mode-test-font-lock-math-embedding ()
+  (satysfi-ts-mode-test--with-buffer
+      "let m = ${#foo}\n"
+    (should (satysfi-ts-mode-test--face-matches-p
+             (satysfi-ts-mode-test--pos "#")
+             'font-lock-builtin-face))))
+
 (provide 'satysfi-ts-mode-test)
 ;;; satysfi-ts-mode-test.el ends here
