@@ -245,7 +245,7 @@
        ((match ">" "block_text") parent-bol ,indent-end)
        ((match "}" "inline_text") parent-bol ,indent-end)
        ((match "}" "inline_text_list") parent-bol ,indent-end)
-       ((match "}" "inline_bullet_list") parent-bol ,indent-end)
+       ((match "}" "inline_text_bullet_list") parent-bol ,indent-end)
        ((match ")" "parened_expr") parent-bol ,indent-end)
        ((match ")" "cmd_expr_arg") parent-bol ,indent-end)
 
