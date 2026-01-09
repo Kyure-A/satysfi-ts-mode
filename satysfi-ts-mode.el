@@ -1,8 +1,8 @@
 ;;; satysfi-ts-mode.el --- A tree-sitter based major-mode for SATySFi  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2024 Kyure_A
+;; Copyright (C) 2026 Kyure_A
 
-;; Author: Kyure_A <twitter.com/kyureq>
+;; Author: Kyure_A <github.com/Kyure-A>
 ;; Keywords: languages
 
 ;; Version: 0.1.0
