@@ -105,6 +105,7 @@
     "?->"
     "->"
     "<-"
+    "::"
     "="
     "!")
   "List of operators used in the text of SATySFi.")
@@ -143,7 +144,12 @@
    :language 'satysfi
    :feature 'escape
    '((inline_literal_escaped) @font-lock-escape-face)
-   
+
+   :language 'satysfi
+   :feature 'field
+   '((type_record_unit (identifier) @font-lock-property-face)
+     (record_unit . (identifier) @font-lock-property-face))
+
    :language 'satysfi
    :feature 'function
    '(;; stmt
@@ -158,7 +164,7 @@
      [
       (inline_text_embedding)
       (block_text_embedding)
-      ;;(math_text_embedding)
+      (math_embedding)
       ] @font-lock-builtin-face)
    
    :language 'satysfi
@@ -191,6 +197,8 @@
    :feature 'parameter
    '((type_param) @font-lock-function-name-face
      ;; stmt
+     (sig_val_stmt name: (inline_cmd_name) @font-lock-function-name-face signature: (type_math_cmd))
+     (sig_direct_stmt name: (inline_cmd_name) @font-lock-function-name-face signature: (type_math_cmd))
      (let_inline_stmt [arg: (_) @font-lock-function-name-face optarg: (_) @font-lock-function-name-face])
      (let_block_stmt [arg: (_) @font-lock-function-name-face optarg: (_) @font-lock-function-name-face])
      ;; expr
@@ -306,7 +314,7 @@
                     (append "{}()<>" electric-indent-chars))
         (setq-local treesit-font-lock-feature-list
                     '((comment escape)
-                      (function constant keyword string number type include namespace parameter)
+                      (function constant keyword string number type include namespace parameter field)
                       (annotation expression literal)
                       (bracket operator)))
         (treesit-major-mode-setup)
